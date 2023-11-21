@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<style>
+    [type="button"] {
+        color: green;
+    }
+</style>
+
+<p>안녕하세요.</p>
+<p id="hello">안녕하세요.</p>
+<p class="hello">안녕하세요.</p>
+<input type="button" value="안녕하세요">
+
+
+<!-- 상속관계 -->
+<style>
+    header > h1 {
+        color: red;
+    }
+
+    header > h1, header > h2 {
+        color: red;
+    }
+</style>
+
+<header>
+    <h1>조 루소</h1>
+    <h2>안소니 루소</h2>
+    <ul>
+        <li>
+            <h1>안소니 루소 1세</h1>
+        </li>
+        <li>
+            <h1>안소니 루소 2세</h1>
+        </li>
+        <li>
+            <h1>안소니 루소 3세</h1>
+        </li>
+        <li>
+            <h1>안소니 루소 4세</h1>
+        </li>
+    </ul>
+</header>
+
+<style>
+    h1 + p {
+        color: red;
+    }
+</style>
+
+<h1>h1</h1>
+<p>첫 번째 자식 p</p>
+<h2>h2</h2>
+<p>두 번째 자식 p</p>
+
+``` html
+<style>
+    h1 ~ p {
+        color: red;
+    }
+</style>
+
+<h1>h1</h1>
+<p>첫 번째 자식 p</p>
+<h2>h2</h2>
+<p>두 번째 자식 p</p>
+
+<!-- 이벤트 -->
+<style>
+    header  > p:hover  {
+        color:red;
+    }
+</style>
+
+
+<header>
+    <p>Avengers</p>
+    <div>
+        <p>End game</p>
+    </div>
+</header>
+</body>
+</html>
