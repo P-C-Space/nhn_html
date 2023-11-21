@@ -54,3 +54,64 @@ image:../images/CGIImage.png[CGIImage.png]
 
 image:../images/JavaEE.png[JavaEE.png]
 
+== Web.xml 파일 사용법(하위 태그들)
+==== *Servlet: Servlet 등록 정보*
+
+* servlet-name: Servlet 이름
+* servlet-class: Servlet class의 FQCN
+* init-param: Servlet의 초기 파라미터
+* param-name
+* param-value
+* load-on-startup: 웹 애플리케이션 구동 시 로딩 여부
+
+==== *servlet-mapping : Servlet과 URL 맵핑 정보*
+
+* servlet-name
+* url-pattern: 와일드카드 * 사용 가능, *. 는 확장자로 매칭
+* /foo/bar/*
+* *.jsp
+
+==== *context-param : ServletContext의 초기 파라미터*
+
+* param-name
+* param-value
+
+==== *welcome-file-list : welcome file 리스트*
+
+* welcome-file : index.html 같은 파일… -&gt; 기본페이지
+
+==== *error-page*
+
+* 둘 중 하나 선택
+* error-code : 404, 500 같은 http status code
+* exception-type: Java 예외 class FQCN
+* location: 예외 처리할 UR, /로 시작해야 함
+
+==== *filter : Servlet Filter 등록 정보*
+
+==== *filter-mapping : Servlet Filter와 URL 맵핑 정보*
+
+==== *listener : Listener 등록 정보*
+
+
+=== Cookie
+* 사용자가 엡사이트를 방문할 때 해당 웹사이트의 웹서버에 의해 생성되어 사용자의 브라우저에 저장되는 작은 데이터 블록
+
+=== Optional.of vs Optional.ofNullable
+* Optional.of Null인 아닌 경우
+** Null 인 경우 NULL point Exception 발생
+* Optional.Nullable은 전달되는 인자값이 Null일 가능성이 있을때 사용
+
+=== Map vs flatMap 차이
+* map은 각각 단일 Stream
+* flatMap은 하나의 Stream
+
+=== Session
+* 상태가 없는 (stateless) http 프로토콜 상에서 일정 시간동안 같은 사용자로부터 여러 요청을 하나의 상태로 유지시키는 기술
+
+
+== 2장
+=== RequestDispatcher
+* 현재의 요청에 대한 정보를 저장했다가
+* 다른 자원(Servlet, JSP, HTML)으로 전달(forward, include)하는 기능을 제공
+* 두 가지 메서드 제공 forward(), include()
