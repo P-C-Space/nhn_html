@@ -115,3 +115,350 @@ image:../images/JavaEE.png[JavaEE.png]
 * 현재의 요청에 대한 정보를 저장했다가
 * 다른 자원(Servlet, JSP, HTML)으로 전달(forward, include)하는 기능을 제공
 * 두 가지 메서드 제공 forward(), include()
+
+==== enc-type : HTML form content-type
+* method='post'
+
+=== 속성값
+* application/x-www-form-urlencoded
+** default
+** key=value&key=value&..
+** 모든 데이터(문자)은 서버로 보내기 전에 인코딩됨을 명시함.
+
+* multipart/form-data
+** 모든 문자를 인코딩하지 않음을 명시함
+** 파일이나 ASCII가 아닌 문자열, 바이너리 데이터 전송 시 multipart/form-data
+** multipart/form-data content는 multipart MIME 데이터의 모든 규칙을 따름
+* text/plain
+** 공백 문자(space)sms "+" 기호로 변환하지만, 나머지 문자는 모두 인코딩 되지 않음을 명시함
+
+=== MINME(Multipurpose Internet Mail Extensions)
+* 전자 우편을 위한 인터넷 표준 포맷
+* 이메일 메세지 형식을 확장
+** ASCII 이외의 문자셋으로 표현된 텍스트를 지원
+** 오디오, 비디오, 이미지, 애플리케이션 프로그램 등을 첨부할 수 있도록 하기 위한 인터넷 표준
+
+.자주사용하는 MIME TYPE
+- text/html : HTML 문서를 나타내는 MIME 타입입니다. 웹 브라우저에서 HTML 문서를 받을 때 사용됩니다.
+- text/plain : 일반 텍스트를 나타내는 MIME 타입입니다. 예를 들어, 서블릿에서 출력하는 일반 텍스트 메시지를 브라우저에서 받을 때 사용됩니다.
+- image/jpeg : JPEG 형식의 이미지를 나타내는 MIME 타입입니다. 웹 페이지에서 이미지를 보여줄 때 사용됩니다.
+- image/png : PNG 형식의 이미지를 나타내는 MIME 타입입니다. JPEG 대신 PNG를 사용하면 이미지의 투명도와 압축률이 더 좋아지는 등의 이점이 있습니다.
+- application/pdf : PDF 문서를 나타내는 MIME 타입입니다. 웹 페이지에서 PDF 문서를 보여줄 때 사용됩니다.
+- application/json : JSON 데이터를 나타내는 MIME 타입입니다. 웹 페이지에서 JSON 데이터를 전송하거나 받을 때 사용됩니다.
+- application/xml : XML 데이터를 나타내는 MIME 타입입니다. 웹 페이지에서 XML 데이터를 전송하거나 받을 때 사용됩니다.
+- application/octet-stream : 이진 파일을 나타내는 MIME 타입입니다. 예를 들어, 파일 다운로드 기능을 구현할 때 사용됩니다.
+
+
+==== Multipart Message
+* MIME 메세지 바디는 multipart로 구성
+[source]
+----
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary=frontier
+
+This is a message with multiple parts in MIME format.
+--frontier
+Content-Type: text/plain
+
+This is the body of the message.
+--frontier
+Content-Type: application/octet-stream
+Content-Transfer-Encoding: base64
+
+PGh0bWw+CiAgPGhlYWQ+CiAgPC9oZWFkPgogIDxib2R5PgogICAgPHA+VGhpcyBpcyB0aGUg
+Ym9keSBvZiB0aGUgbWVzc2FnZS48L3A+CiAgPC9ib2R5Pgo8L2h0bWw+Cg==
+--frontier--
+----
+* 각각의 part는 헤더와 바디를 가짐 -> multipart 중첩 구조
+* Content-type header에 boundary를 가지고 있음
+* boundary 메세지의 시작과 끝, 그리고 part들 사이에 위치해서 part들을 구분
+
+==== JSP 문법
+===== <%@%>
+* page : JSP 페이지에 대한 정보
+----
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+----
+
+* 'include' : JSP 파일 안에 다른 JSP나 HTML 파일을 포함
+----
+<%@ include file="/some/path/content.html" %>
+----
+
+* 'tablib' : 태그 라잉브러리 선언
+----
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+----
+
+== JSP 기본 문법(Expression)
+=== <%=%>
+* 변수, 메서드 호출 등 표현식(expression)의 실행 결과를 출력
+----
+<%= "Hello, World!" %>
+----
+
+=== <%!%>
+* 변수 메서드 등을 선언
+----
+<%! String name = "James" %>
+----
+
+----
+<%!
+    public int minus(int i, int j) {
+        return i - j;
+    }
+%>
+----
+
+== JSP 동작 구조
+image:../images/JSPArchitector.png[JSPArchitector.png]
+
+== JSP
+|===
+|객체 |타입 |설명
+
+|page |javax.servlet.jsp.HttpJspPage |page의 Servlet 인스턴스
+|config |javax.servlet.ServletConfig |ServletConfig
+|request |HttpServletRequest |요청 객체
+|response |HttpServletResponse |응답 객체
+|out |javax.servlet.jsp.JspWriter |page 컨텐트 출력용 스트림
+|session |javax.servlet.http.HttpSession |세션
+|application|javax.servlet.ServletContext|ServletContext
+|pageContext |javax.servlet.jsp.PageContext |JSP page의 실행 context
+|exception |java.lang.Throwable |처리되지 않은 에러나 예외
+|===
+
+=== Scope
+==== page
+* scope : JSP 페이지 내에서만 사용할 수 있는 scope
+* PageContext 내장객체를 사용
+* jsp에서는 pageContext 내장 변수를 사용함
+* **forwar가 될 경우 해당 Page scope에 지정된 변수는 사용할 수 없음**
+* 지역변수처럼 사용할 수 있음
+
+==== request
+* scope : 하나의 요청을 기준으로 서버가 클라이언트에게 응답을 보낼 떄까지 사용할 수 있는 scope
+* jsp에서는 request 내장 변수를 사용함
+* **forward에서 값을 유지할 수 있음**
+
+==== session
+* scope : session 객체가 생성되고 소멸
+* jsp에서는 session 내장 변수를 사용함
+
+==== application
+* scope : application이 생성되고 소멸할 때까지
+* 하나의 서버(tomcat)에는 여러개의 application이 구동될 수 있음
+* JSP에서는 application 내장 객체를 사
+
+=== JavaBeans란?
+* 자바로 작성된 소프트웨어 컴포넌트
+* 빌더 형식의 개발도구에서 가시적으로 조작이 가능하고 또한 재사용이 가능한 소프트웨어 컴포넌트
+* ≠ EJB(Enterprise JavaBeans)
+* ≠ Spring Bean
+* java로 작성된 재사용 가능한 소프트웨어 컴포넌트
+
+=== JavaBeans 제약조건
+* public default (no-arg) constructor
+* getter/setter
+* implements java.io.Serializable
+
+=== JSP action tag (JavaBeans 사용)
+==== jsp:useBean
+* 기존에 있던 객체(bean)을 찾거나 없으면 새로운 객체(bean)을 생성해서 반환
+** 지정된 scope에 설정한 id와 같은 이름의 속성 (attribute)이 있으면 해당 bean을 반환
+** 없으면 새로운 bean을 생성해서 지정된 scope에 id와 같은 이름의 속성(attribute)으로 설정
+
+=== POJO(Plain Old JAVA Object)
+* 특정 기술과 환경에 종속되어 의존하게 된 자바 코드는 가독성이 떨어져 유지보수가 어렵고 확장성이 매우 떨어지는 단점
+* 이는 객체지향 언어인 자바가 객체지향의 장점을 잃어버리게 되는 것입니다.
+
+==== 제약조건
+* 특정 규약에 종속되지 않는다.
+** java 언어와 꼭 필요한 API외에는 종속되지 말아야 합니다.
+* 특정 환경에 종속되지 않는다.
+** 특정 기업의 프레임워크나 서버에서 동작하는 코드라면 POJO라고 할 수 없다.
+* 객체 지향적 원리에 충실해야 합니다.
+** POJO는 객체 지향적인 자바언어의 기본에 충실하게 만들어져야 합니다.
+** 자바 문법을 사용했다고 해서 객체지향 프로그래밍과 객체지향 설계가 적용되었다고 볼 수 없다.
+** 책임과 역할이 각기 다른 코드를 한 클래스에 몰아넣어 큰 만능 클래스를 만들고 상속과 다형성의 적용이 아닌 if/switch 문으로 가득 설계된 Object라면 POJO라고 할 수 없다.
+
+=== 장점
+* 깔끔한 코드
+* 간편한 테스트
+* 객체지향적인 설계
+* 객체지향 프로그램은 복잡한 도메인을 가진 곳에서 효과적으로 사용될 수 있습니다.
+
+=== *POJO VS Java Beans*
+
+JavaBeans는 특별한 POJO의 변형이라고 할 수 있습니다. JavaBeans는 POJO입니다. 하지만 POJO는 JavaBeans라고 할 수는 없습니다.
+즉 POJO는 JavaBeans보다는 넓은 개념입니다. POJO 클래스와 Bean은 모두 가독성과 재사용성을 높이기 위해 Java 객체를 정하는데 사용됩니다.
+POJO에는 다른 제한 사항이 없지만 빈은 몇가지 제한 사항이 있는 특수한 POJO입니다.
+
+|===
+|*POJO* |*JavaBeans*
+
+|Java language에 의해 강제되는 것 외에는 특별한 제한이 없습니다. |몇 가지 제한 사항이 있는 특수 POJO 객체입니다.
+|Field에 대한 통제를 제공하지 않습니다. |Field에 대한 통제를 제공합니다.
+|직렬화 가능한 인터페이스를 구현할 수 있습니다. |반드시 직렬화 가능한 인터페이스를 구현해야 합니다.
+|필드는 이름으로 접근할 수 있습니다. |필드는 getter, setter에서만 접근할 수 있습니다.
+|인수가 없는 default생성자가 있을 수도 있고 없을 수도 있습니다. |반드시 인수가 없는 default생성자가 존재해야 합니다.
+|===
+
+=== JSP EL(Expression Language)
+* java bean의 프로퍼티나 array, list, map 같은 자료구조의 값을 쉽게 꺼낼 수 있게 해주는 표현식
+* javascript(ECMA Script 2.0)에서 영감받아 만든 표현식
+* Scriptlet 사용 최소화
+
+=== EL 표기법
+* immediate evaluation : JSP가 실행될 때 표현식으로 지정한 값이 JSP 페이지에 즉시 반영
+** ${표현식}
+* deferred evaluation : 표현식으로 지정된 값은 시스템에서 ㅣㄹ요하다고 판단할 때 그 값을 사용
+
+=== {표현식}
+----
+my name is <jsp:getProperty name="user1" property="name/>.<br />
+----
+----
+my name is ${user.name}.<br/>
+----
+
+=== EL 검색 범위
+==== 범위 지정시 scope 참고 객체
+* pageScope -> JspContext 객체를 참조
+* requestScope -> ServletRequest 객체를 참조
+* sessionScope -> HttpSession 객체를 참조
+* applicationScope -> ServletContext 객체를 참조
+
+=== 기본 문법 - 리터럴
+* 문자열 : ${"나랏말"},${'문자'}
+* 정수 : ${20}
+* 실수 : ${3.14}
+* boolean : ${true}
+* null : ${null}
+
+----
+<div>
+    ${"나랏말"}이 중국과 달라 ${'문자'}와 서로 통하지 아니하므로<br />
+    ${20}명의 ${3.14}인 백성이 이르고자 하는 바가 있어도<br />
+    마침내 제${null}뜻을 능히 펴지 못하는 사람이 많다 ${true}.<br />
+</div>
+----
+
+==== EL 기본 문법 - 배열, 리스트, 맵
+[source, html]
+----
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.HashMap" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" trimDirectiveWhitespaces="true"  %>
+<%
+    pageContext.setAttribute("array", new String[] { "this", "is", "how", "we", "do", "it" });
+
+    List<Integer> list = new ArrayList<>();
+    list.add(1);
+    list.add(3);
+    list.add(5);
+
+    pageContext.setAttribute("list", list);
+
+    Map<String, String> map1 = new HashMap<>();
+    map1.put("Mariah Carey", "Without you");
+    map1.put("Whitney Houston", "I will always love you");
+    map1.put("Celine Dion", "My heart will go on");
+
+    pageContext.setAttribute("map1", map1);
+
+    Map<String, Integer> map2 = new HashMap<>();
+    map2.put("j", 1);
+    map2.put("s", 2);
+    map2.put("p", 7);
+
+    pageContext.setAttribute("map2", map2);
+%>
+<html>
+    <head>
+        <title>el - array, list, map test</title>
+    </head>
+    <body>
+        <p>array=${array[2]}</p>
+        <p>list=${list[1]}</p>
+        <p>map1=${map1['Whitney Houston']}</p>
+        <p>map2=${map2.p}</p>
+    </body>
+</html>
+----
+
+==== JSTL(JSP Standard Tag Library)
+== 태그 라이브러리 (종류)
+
+|===
+|prefix |name |URI |내용
+
+|c |core |http://java.sun.com/jsp/jstl/core |변수 지원, URL 관리, 흐름 제어 등
+|fn |function |http://java.sun.com/jsp/jstl/functions |문자열 조작 등
+|fmt |formatting |http://java.sun.com/jsp/jstl/fmt |로케일, 타임존, 날짜, 시간, 화폐 포맷팅 등
+|x |xml |http://java.sun.com/jsp/jstl/xml |XML 처리
+|sql |sql |http://java.sun.com/jsp/jstl/sql |데이터 소스 설정, SQL 쿼리 수행 등
+|===
+
+
+=== Reflection
+* Reflection은 자바의 프로그래밍 언어의 기능, 실행 중은 JAVA 프로그램이 자체적으로 검사하거나 프로그램 내부 속성을 조작할 수 있습니다.
+* 자체적으로 생성된 객체의 class type을 알지 못하더라도 해당 class의 메소드, 타입, 변수들에 접근할 수 있도록 해주는 JAVA API 입니다.
+
+* ArrayList.class의 method 리스트를 출력하는 예제
+
+[source, java]
+----
+public static void main(String[] args) {
+    Class c = ArrayList.class;
+    Method m[] = c.getDeclaredMethods();
+    for(int i=0; i<m.length; i++){
+        System.out.println(m[i].toString());
+    }
+}
+----
+
+* 다른 클래스에 대한 상세한 내용을 알 수 있음
+* reflection을 통해 java 프로그램 내에서 클래스를 읽고, 변수, 메서드, 생성자를 알아낼 수 있고, 작업할 수 있음
+
+=== Annotation
+
+* JAVA Doc
+
+|===
+|tag |설명
+|*@author* |*클래스나 인터페이스의 제작자 표시*
+|*@version*|*클래스나 인터페이스에서의 버전 정보*
+|*@param* |*매개 변수에 대한 설명*
+|*@return* |*메소드가 void를 리턴하거나 생성자가 아닌 경우를 제외하고 모두 사용해야 함*
+|@exception, @throws |메소드가 발생시킬 수 있는 예외를 기술
+|@deprecated |다음 버전에서 폐기된 메소드를 알림
+|@serial |기본적으로 직렬화 할 수 있는 클래스의 멤버를 설명
+|*@see* |*- 어떤 클래스, 인터페이스, 메소드, 생성자 혹은 URL에 대한 전후참조 표시 - 분리된 줄에 링크가 생김*
+|@since |Tag를 가진 객체가 언제 추가되었는지 명시 
+|{@link #entity label} |메소드나 필드의 상호 참조에 대한 링크를 표시문서 텍스트 안에 링크가 생김
+|{@doc-root} | 문서에 대한 루트디렉토리에 대한 상대경로 지정
+|===
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
