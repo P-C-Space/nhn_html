@@ -6,12 +6,22 @@ import java.util.Objects;
 import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebInitParam;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.ServletConfig;
 
+@WebServlet(
+        name = "loginServlet",
+        urlPatterns = "/login",
+        initParams = {
+                @WebInitParam(name="id",value="admin"),
+                @WebInitParam(name="pwd",value="1234"),
+        }
+)
 public class LoginServlet extends HttpServlet {
     private static final Logger log = Logger.getLogger(LoginServlet.class.getName());
     private String initParamId;

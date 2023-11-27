@@ -4,29 +4,29 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
     <!-- NowServlet 시간 표시 페이지-->
-        <servlet>
-            <servlet-name>nowServlet</servlet-name>
-            <servlet-class>com.example.hello.NowServlet</servlet-class>
-        </servlet>
+    <servlet>
+        <servlet-name>nowServlet</servlet-name>
+        <servlet-class>com.example.hello.NowServlet</servlet-class>
+    </servlet>
 
-        <servlet-mapping>
-            <servlet-name>nowServlet</servlet-name>
-            <url-pattern>/now</url-pattern>
-        </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>nowServlet</servlet-name>
+        <url-pattern>/now</url-pattern>
+    </servlet-mapping>
 
     <!-- MultiServlet -->
-        <servlet>
-            <servlet-name>multiServlet</servlet-name>
-            <servlet-class>com.example.hello.MultiServlet</servlet-class>
-            <load-on-startup>1</load-on-startup>
-        </servlet>
+    <servlet>
+        <servlet-name>multiServlet</servlet-name>
+        <servlet-class>com.example.hello.MultiServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
 
-        <servlet-mapping>
-            <servlet-name>multiServlet</servlet-name>
-            <url-pattern>/multi</url-pattern>
-        </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>multiServlet</servlet-name>
+        <url-pattern>/multi</url-pattern>
+    </servlet-mapping>
 
-<!--Hello Servlet-->
+    <!--Hello servlet-->
     <servlet>
         <servlet-name>helloServlet</servlet-name>
         <servlet-class>com.example.hello.HelloServlet</servlet-class>
@@ -122,24 +122,24 @@
 
 
     <!-- login -->
-    <servlet>
-        <servlet-name>loginServlet</servlet-name>
-        <servlet-class>com.example.hello.LoginServlet</servlet-class>
+<!--    <servlet>-->
+<!--        <servlet-name>loginServlet</servlet-name>-->
+<!--        <servlet-class>com.example.hello.LoginServlet</servlet-class>-->
 
-        <init-param>
-            <param-name>id</param-name>
-            <param-value>admin</param-value>
-        </init-param>
-        <init-param>
-            <param-name>pwd</param-name>
-            <param-value>1234</param-value>
-        </init-param>
-    </servlet>
+<!--        <init-param>-->
+<!--            <param-name>id</param-name>-->
+<!--            <param-value>admin</param-value>-->
+<!--        </init-param>-->
+<!--        <init-param>-->
+<!--            <param-name>pwd</param-name>-->
+<!--            <param-value>1234</param-value>-->
+<!--        </init-param>-->
+<!--    </servlet>-->
 
-    <servlet-mapping>
-        <servlet-name>loginServlet</servlet-name>
-        <url-pattern>/login</url-pattern>
-    </servlet-mapping>
+<!--    <servlet-mapping>-->
+<!--        <servlet-name>loginServlet</servlet-name>-->
+<!--        <url-pattern>/login</url-pattern>-->
+<!--    </servlet-mapping>-->
 
     <!-- logout -->
     <servlet>
@@ -152,12 +152,90 @@
         <url-pattern>/logout</url-pattern>
     </servlet-mapping>
 
+    <!-- Filter -->
+<!--    <filter>-->
+<!--        <filter-name>characterEncodingFilter</filter-name>-->
+<!--        <filter-class>com.example.servlet.filter.CharacterEncodingFilter</filter-class>-->
+<!--        <init-param>-->
+<!--            <param-name>encoding</param-name>-->
+<!--            <param-value>UTF-8</param-value>-->
+<!--        </init-param>-->
+<!--    </filter>-->
 
+<!--    <filter-mapping>-->
+<!--        <filter-name>characterEncodingFilter</filter-name>-->
+<!--        <url-pattern>/*</url-pattern>-->
+<!--    </filter-mapping>-->
+
+    <!-- loginFilter -->
+    <filter>
+        <filter-name>lgoinCheckFilter</filter-name>
+        <filter-class>com.example.servlet.filter.LoginCheckFilter</filter-class>
+        <init-param>
+            <param-name>exclude-urls</param-name>
+            <param-value>
+                /login
+                /logout
+                /login.html
+                /fileUpload.html
+                /fileDownload.html
+            </param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>lgoinCheckFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <!-- counter 재구현 -->
+<!--    <context-param>-->
+<!--        <param-name>counterFileName</param-name>-->
+<!--        <param-value>counter.dat</param-value>-->
+<!--    </context-param>-->
+
+<!--    <listener>-->
+<!--        <listener-class>com.example.listener.ServletContextListener</listener-class>-->
+<!--    </listener>-->
+
+    <filter>
+        <filter-name>counterFilter</filter-name>
+        <filter-class>com.example.servlet.filter.CounterFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>counterFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <!-- sessionListener -->
+<!--    <listener>-->
+<!--        <listener-class>com.example.listener.SessionListener</listener-class>-->
+<!--    </listener>-->
+    
+    
+    <!-- fileupload -->
+    <servlet>
+        <servlet-name>fileUploadServlet</servlet-name>
+        <servlet-class>com.example.file.FileUploadServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>fileUploadServlet</servlet-name>
+        <url-pattern>/fileUpload</url-pattern>
+    </servlet-mapping>
+
+    <!-- fileDownload-->
+    <servlet>
+        <servlet-name>fileDownloadServlet</servlet-name>
+        <servlet-class>com.example.file.FileDownloadServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>fileDownloadServlet</servlet-name>
+        <url-pattern>/fileDownload</url-pattern>
+    </servlet-mapping>
 
     <!-- 시작지점 -->
-<!--    <welcome-file-list>-->
-<!--        <welcome-file>/main.html</welcome-file>-->
-<!--    </welcome-file-list>-->
+        <welcome-file-list>
+            <welcome-file>/login.html</welcome-file>
+        </welcome-file-list>
 
     <error-page>
         <error-code>400</error-code>
@@ -168,5 +246,6 @@
         <error-code>500</error-code>
         <location>/error/500.html</location>
     </error-page>
+
 
 </web-app>
