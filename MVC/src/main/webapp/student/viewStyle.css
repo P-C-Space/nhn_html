@@ -1,0 +1,15 @@
+table tr > td {
+    padding: 5px;
+    border: 1px #ccc solid;
+}
+
+.header {
+    text-align: center;
+    font-weight: bold;
+}
+
+table {
+    width: 800px;
+    border-collapse: collapse;
+    border: 1px #ccc solid;
+}
