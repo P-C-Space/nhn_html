@@ -10,24 +10,35 @@ public class ContollerFactory {
     private final ConcurrentMap<String, Object> beanMap = new ConcurrentHashMap<>();
         public void init(Set<Class<?>> clazz){
             for (Class<?> controllerClass : clazz) {
-                try {
-                    // Controller 클래스의 기본 생성자를 이용하여 인스턴스 생성
-                    Object controllerInstance = controllerClass.getDeclaredConstructor().newInstance();
+                RequestMapping requestMapping = controllerClass.getAnnotation(RequestMapping.class);
+                System.out.println("====================");
+                System.out.println(requestMapping.value());
+                System.out.println(requestMapping.method());
+                System.out.println("====================");
 
-                    // Controller 클래스에서 사용 가능한 메서드들을 가져와서 처리
-                    for (Method method : controllerClass.getDeclaredMethods()) {
-                        // @RequestMapping 어노테이션이 있는 메서드만 처리
-                        if (method.isAnnotationPresent(RequestMapping.class)) {
-                            RequestMapping annotation = method.getAnnotation(RequestMapping.class);
+                String servletPath = requestMapping.value();
+                String method = String.valueOf(requestMapping.method());
 
-                            // beanMap에 key = method + servletPath, value = Controller instance를 저장
-                            String key = annotation.method() + annotation.value();
-                            beanMap.put(key, controllerInstance);
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace(); // 예외 처리는 실제 상황에 맞게 수정하세요.
+                Command command = null;
+                if("/student/list.do".equals(servletPath) && "GET".equalsIgnoreCase(method) ){
+                    command = new StudentListController();
+                }else if("/student/view.do".equals(servletPath) && "GET".equalsIgnoreCase(method) ){
+                    command = new StudentViewController();
+                }else if("/student/delete.do".equals(servletPath) && "POST".equalsIgnoreCase(method) ){
+                    command = new StudentDeleteController();
+                }else if("/student/update.do".equals(servletPath) && "GET".equalsIgnoreCase(method) ){
+                    command = new StudentUpdateFormController();
+                }else if("/student/update.do".equals(servletPath) && "POST".equalsIgnoreCase(method) ){
+                    command = new StudentUpdateController();
+                }else if("/student/register.do".equals(servletPath) && "GET".equalsIgnoreCase(method) ){
+                    command = new StudentRegisterFormController();
+                }else if("/student/register.do".equals(servletPath) && "POST".equalsIgnoreCase(method) ){
+                    command = new StudentRegisterController();
+                }else if("/student/error.do".equals(servletPath)){
+                    command = new ErrorController();
                 }
+
+                beanMap.put(method+servletPath,command);
             }
         }
 
