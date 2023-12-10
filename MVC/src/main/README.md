@@ -1,1 +1,0 @@
-MVC ( Model-View-Controller ) Pattern
