@@ -1,0 +1,123 @@
+=== 변수
+
+==== var
+* 변수의 중복선언 가능 (에러 발생 안함)
+* 코드량이 많아진다면? 스파게티 코드
+
+==== const (Immutable)
+* 변수 재 선언이 되지 않음
+* 변수 재 할당 불가능 할당된 객체의 내용(프로퍼티의 추가, 삭제, 값의 변경)은 변경할 수 있다.
+* 반드시 선언과 초기화를 동시에 진행
+
+==== let
+* 변수 재선언이 되지 않음
+* 변수 재 할당 가능
+
+=== Window 객체
+* 브라우저 안의 모든 요소들이 소속된 객체, 최상위 객체, 전역 객체
+* 일반적으로 브라우저 창을 의미
+
+=== 자료형
+* javaScript의 변수는 어떤 순간에는 문자열 또는 숫자가 될 수 있습니다.
+* 동적 타입 언어 : 자료형은 컴파일 시 자료형을 정하는 것이 아니고 **실행 시점**에 결정
+
+==== 숫자형
+* 무한대
+** Infinity
+* 숫자 아님
+** NaN
+* BigInt
+** 2^53 - 1보다 큰 정수를 표현
+** 정수 끝에 n을 붙임
+
+[source, JavaScript]
+----
+let num = 123;
+num = 12.345678;
+console.log(100/0); // 무한대
+console.log(Infinity);  //무한대   Infinity를 직접 참조할 수 있습니다.
+console.log("Not a Number" / 100 ); // NaN , 문자열을 숫자로 나누면 NaN 오류가 발생 합니다.
+console.log( 9007199254740991n); // BigInt -> 정수 리터럴 끝에 n을 붙이면 만들 수 있습니다.
+----
+
+==== 문자형
+* c언어 처럼 char 글자형을 지원하지 않습니다. 
+* 큰따옴표, 작은 따옴표, 역 따옴표
+
+[source, JavaScript]
+----
+let myName="jeongwoo";
+let yourName="you";
+let phrse = `My name is ${myName}`;
+console.log(phrse);
+console.log(` result = ${100+200}`);
+----
+
+==== 형변환
+typeof -> java instanceOf
+[source, JavaScript]
+----
+let text = "marco";
+console.log(text + " : " + typeof text); // string
+text = 100;
+console.log(text + " : " + typeof text); // number
+text = '100' + 10;
+console.log(text + " : " + typeof text); // string
+text = '100' / '10';
+console.log(text + " : " + typeof text); // number
+----
+
+==== null
+* 자료형 중 어느 자료형에도 속하지 않는 값
+* 자바스크립트에서는 비어있는 값, 존재하지 않는 값, 알 수 없는 값
+[source, JavaScript]
+----
+let myName = null;
+----
+
+==== undefined
+* 값이 할당되지 않는 상태를 나타낼 때 사용
+* 값을 할당하지 않는다면 자동으로 undefined
+
+==== Object(객체)
+* 원시타입(문자열, 숫자)과 달리 다양한 데이터를 담을 수 있습니다.
+* 키로 구분된 데이터 집합이나 복ㅈㅂ한 개체를 저장할 수 있습니다.
+[source, JavaScript]
+----
+let oldPeople = new Object();
+let youngPeople = {};
+let people = {
+    name : "jeongwoo",
+    age : "25"
+};
+console.log(people.name);
+console.log(people.age);
+delete people.age;
+console.log(people.age);
+----
+
+==== Map
+[source, JavaScript]
+----
+const map1 = new Map();
+
+map1.set('a', 1);
+map1.set('b', 2);
+map1.set('c', 3);
+
+console.log(map1.get('a'));
+// expected output: 1
+
+map1.set('a', 97);
+
+console.log(map1.get('a'));
+// expected output: 97
+
+console.log(map1.size);
+// expected output: 3
+
+map1.delete('b');
+
+console.log(map1.size);
+// expected output: 2
+----
